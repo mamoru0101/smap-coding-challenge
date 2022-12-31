@@ -17,17 +17,28 @@
             <canvas id="consumption-chart"></canvas>
 
             <div class="d-flex justify-content-between">
-                <div class="h3 d-flex">
-                    <div class="btn btn-secondary"> <</div>
-                    <div class="mx-5">{{ current_date }}</div>
-                    <div class="btn btn-secondary disabled"> ></div>
-                </div>
                 <div>
-                    <select>
+                    {% if prev_date %}
+                        <button class="h2 btn" onclick="location.href='?current_date={{ prev_date }}'">&laquo;</button>
+                    {% else %}
+                        <button class="h2 btn disabled">&laquo;</button>
+                    {% endif %}
+
+                    <span class="h2 mx-3">{{ current_date }}</span>
+
+                    {% if next_date %}
+                        <button class="h2 btn" onclick="location.href='?current_date={{ next_date }}'">&raquo;</button>
+                    {% else %}
+                        <button class="h2 btn">&raquo;</button>
+                    {% endif %}
+                    <select onchange="(()=>{
+                      location.href=`?current_date=${this.value}`
+                    })()">
                         {% for date in date_list %}
                             <option value="{{ date }}" {% if date == current_date %}selected{% endif %}>{{ date }}</option>
                         {% endfor %}
                     </select>
+
                 </div>
             </div>
 

@@ -2,21 +2,22 @@
 
 {% block content %}
     <div>
-        <div class="h1">Summary</div>
-        <div>
-            <div class="h2">consumption</div>
-            <canvas id="consumption-chart"></canvas>
+        <div class="mb-3">
+            <div class="h1">Summary</div>
+            <div>
+                <div class="h2">consumption</div>
+                <canvas id="consumption-chart"></canvas>
+            </div>
         </div>
-        <div>
+        <div class="mb-3">
             <div class="h2">user</div>
+            {% include "consumption/includes/pagination.html" %}
             <table class="table">
                 <thead>
                 <tr>
                     <th>UserID</th>
                     <th>area</th>
                     <th>tariff</th>
-                    <th>total</th>
-                    <th>average</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -29,8 +30,6 @@
                         </td>
                         <td>{{ user.area }}</td>
                         <td>{{ user.tariff }}</td>
-                        <td>{{ user.total }}</td>
-                        <td>{{ user.average }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
