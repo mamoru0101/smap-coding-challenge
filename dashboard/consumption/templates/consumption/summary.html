@@ -5,12 +5,12 @@
         <div class="mb-3">
             <div class="h1">Summary</div>
             <div>
-                <div class="h2">consumption</div>
+                <div class="h2">consumption (per date)</div>
                 <canvas id="consumption-chart"></canvas>
             </div>
         </div>
         <div class="mb-3">
-            <div class="h2">user</div>
+            <div class="h2">users</div>
             {% include "consumption/includes/pagination.html" %}
             <table class="table">
                 <thead>
@@ -31,6 +31,10 @@
                         <td>{{ user.area }}</td>
                         <td>{{ user.tariff }}</td>
                     </tr>
+                {% empty %}
+                    <tr>
+                        <td>no data</td>
+                    </tr>
                 {% endfor %}
                 </tbody>
             </table>
@@ -45,7 +49,6 @@
         "average": [{% for data in aggregate_consumption %}{{ data.average }}, {% endfor %}]
       }
 
-      /* large line chart */
       const ctx = document.getElementById("consumption-chart");
       const chartData = {
         labels: data.datetime,
@@ -74,11 +77,6 @@
           data: chartData,
           options: {
             scales: {
-              xAxes: [{
-                ticks: {
-                  beginAtZero: false
-                }
-              }],
               'y': {
                 type: 'linear',
                 display: true,

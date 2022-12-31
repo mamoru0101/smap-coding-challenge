@@ -58,11 +58,19 @@ def detail(request, user_id):
             .distinct()
         date_list = [str(d) for d in date_list]
 
-        current_date = request.GET.get('current_date', date_list[0])
+        try:
+            latest_date = date_list[0]
+        except IndexError:
+            latest_date = None
 
+        current_date = request.GET.get('current_date', latest_date)
         prev_date, next_date = get_prev_and_next_date(date_list, current_date)
 
-        user_consumption = user.consumptiondata_set.filter(datetime__date=current_date).order_by("datetime")
+        if current_date:
+            user_consumption = user.consumptiondata_set.filter(datetime__date=current_date).order_by("datetime")
+        else:
+            user_consumption = ConsumptionData.objects.none()
+
     except:
         raise Http404()
 
