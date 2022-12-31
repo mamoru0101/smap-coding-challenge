@@ -1,5 +1,104 @@
 {% extends 'consumption/layout.html' %}
 
 {% block content %}
+    <div>
+        <div><a href="{% url "consumption:summary" %}">Summary</a></div>
 
+        <div>
+            <div class="h1">Detail</div>
+            <div>UserID: {{ user.id }}</div>
+            <div>area: {{ user.area }}</div>
+            <div>tariff: {{ user.tariff }}</div>
+        </div>
+
+        <div>
+            <div class="h2">consumption</div>
+
+            <canvas id="consumption-chart"></canvas>
+
+            <div class="d-flex justify-content-between">
+                <div class="h3 d-flex">
+                    <div class="btn btn-secondary"> <</div>
+                    <div class="mx-5">{{ current_date }}</div>
+                    <div class="btn btn-secondary disabled"> ></div>
+                </div>
+                <div>
+                    <select>
+                        {% for date in date_list %}
+                            <option value="{{ date }}" {% if date == current_date %}selected{% endif %}>{{ date }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Date Time</th>
+                        <th>Consumption</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for consumption_data in consumption_list %}
+                        <tr>
+                            <td>{{ consumption_data.datetime|date:"h:i A" }}</td>
+                            <td>{{ consumption_data.consumption }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+    <script>
+      const COLORS = ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d'];
+
+      const data = {
+        "datetime": [{% for data in consumption_list %}"{{ data.datetime|date:"h:i A" }}", {% endfor %}],
+        "consumption": [{% for data in consumption_list %}{{ data.consumption }}, {% endfor %}]
+      }
+
+      /* large line chart */
+      const ctx = document.getElementById("consumption-chart");
+      const chartData = {
+        labels: data.datetime,
+        datasets: [{
+          label: 'consumption',
+          data: data.consumption,
+          backgroundColor: 'transparent',
+          borderColor: COLORS[0],
+          pointBackgroundColor: COLORS[0]
+        }
+//   {
+//     data: [639, 465, 493, 478, 589, 632, 674],
+//     backgroundColor: colors[3],
+//     borderColor: colors[1],
+//     borderWidth: 4,
+//     pointBackgroundColor: colors[1]
+//   }
+        ]
+      };
+      if (ctx) {
+        new Chart(ctx, {
+          type: 'line',
+          data: chartData,
+          options: {
+            scales: {
+              xAxes: [{
+                ticks: {
+                  beginAtZero: false
+                }
+              }]
+            },
+            legend: {
+              display: false
+            },
+            responsive: true
+          }
+        });
+      }
+    </script
 {% endblock %}
